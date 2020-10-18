@@ -9,6 +9,10 @@ public class ClientHandler {
         switch(status){
             case Response.HTTP_200:
                 return "OK";
+            case Response.HTTP_203:
+                return "";
+            case Response.HTTP_206:
+                return "Partial Content";
             case Response.HTTP_403:
                 return "Forbidden";
             case Response.HTTP_404:
@@ -33,6 +37,8 @@ public class ClientHandler {
         @Override
         public void run(){
             try {
+                ClientHandler.this.request = new Request(ClientHandler.this);
+                ClientHandler.this.response = new Response(ClientHandler.this);
                 if(onClientRequest == null) throw new ClientHandlerException();
                 onClientRequest.onClientRequest(request, response);
             }catch(ClientHandlerException | IOException e){
@@ -49,12 +55,10 @@ public class ClientHandler {
      */
     public ClientHandler(Socket socket) throws ClientHandlerException, IOException {
         this.socket = socket;
-        this.request = new Request(this);
-        this.response = new Response(this);
-
     }
 
     /**
+     * Start handling the client request and then return it into clientRequest interface
      * 
      * @throws ClientHandlerException
      */

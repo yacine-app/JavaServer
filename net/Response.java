@@ -16,6 +16,8 @@ import java.util.Set;
 public class Response {
 
     public static final int HTTP_200 = 200;
+    public static final int HTTP_203 = 203;
+    public static final int HTTP_206 = 206;
     public static final int HTTP_403 = 403;
     public static final int HTTP_404 = 404;
     
@@ -53,13 +55,14 @@ public class Response {
             Map.Entry<String, String> entry = (Map.Entry<String, String>) iterator.next();
             String a = entry.getKey() + ClientHandler.HEADER_SPLITER + entry.getValue() + ClientHandler.LINE_SPLITER;
             outputStream.write(a.getBytes());
+            //System.out.print(a);
         }
         outputStream.write(ClientHandler.LINE_SPLITER.getBytes());
         if(entity == null){
             this.clientHandler.socket.close();
             throw new ClientHandlerException();
         }
-        outputStream.write(this.entity.getData());
+        this.entity.copyToOutputStream(outputStream);
         outputStream.write(ClientHandler.LINE_SPLITER.getBytes());
         outputStream.flush();
         outputStream.close();
@@ -142,5 +145,12 @@ public class Response {
      * @param value
      */
     public void setHeader(String name, Date value){ setHeader(name, value.toString()); }
+
+    /**
+     * 
+     * @param name
+     * @param value
+     */
+    public void setHeader(String name, boolean value){ setHeader(name, String.valueOf(value)); }
 
 }

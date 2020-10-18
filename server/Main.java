@@ -46,7 +46,7 @@ public class Main implements Interfaces.OnClientRequest {
 
     @Override
     public boolean onClientRequest(Request req, Response res) throws ClientHandlerException, IOException {
-        System.out.println(req.getMethod());
+        System.out.println(req.getHeaderValue("Range"));
         req.use("/DOC");
         return false;
     }

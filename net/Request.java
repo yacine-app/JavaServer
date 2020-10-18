@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class Request {
 
     private ClientHandler clientHandler;
-    private String method, version, host, path;
+    private String method = "", version = "", host = "", path = "";
     private HashMap<String, String> requestHeaders = new HashMap<>();
 
     /**
@@ -69,7 +69,17 @@ public class Request {
             this.clientHandler.response.setResponseStatus(Response.HTTP_403);
         else {
             this.clientHandler.response.setResponseStatus(Response.HTTP_200);
-            this.clientHandler.response.setEntity(new Entity(file));
+            Entity entity = new Entity(file);
+            String range = getHeaderValue("Range");
+            if(range != null && entity.getMimeType().contains("video")){
+                System.out.println(range);
+                this.clientHandler.response.setResponseStatus(Response.HTTP_206);
+                String[] a = range.split("=")[1].split("-");
+                long start = Long.parseLong(a[0]);
+                long end = a.length > 1 ? Long.parseLong(a[1]) : start + (1024L * 1024L * 2L);
+                entity.setReadRange(start, end);
+            }
+            this.clientHandler.response.setEntity(entity);
         }
         this.clientHandler.response.end();
     }
@@ -84,28 +94,20 @@ public class Request {
     /**
      * @return the method
      */
-    public String getMethod() {
-        return method;
-    }
+    public String getMethod() { return method; }
 
     /**
      * @return the version
      */
-    public String getVersion() {
-        return version;
-    }
+    public String getVersion() { return version; }
 
     /**
      * @return the path
      */
-    public String getPath() {
-        return path;
-    }
+    public String getPath() { return path; }
 
     /**
      * @return the host
      */
-    public String getHost() {
-        return host;
-    }
+    public String getHost() { return host; }
 }
