@@ -21,7 +21,7 @@ public class Entity {
      * @param res
      * @throws IOException
      */
-    protected static void setFileData(Entity entity, Response res) throws IOException {
+    protected static void setFileData(Entity entity, Response res) {
         if(entity == null)return;
         res.setHeader("Last-Modified", new Date(entity.file.lastModified()));
         res.setHeader("Accept-Ranges", "bytes");
