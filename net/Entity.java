@@ -26,7 +26,7 @@ public class Entity {
         res.setHeader("Last-Modified", new Date(entity.file.lastModified()));
         res.setHeader("Accept-Ranges", "bytes");
         res.setHeader("Keep-Alive", true);
-        res.setHeader("Content-Type", Files.probeContentType(entity.file.toPath()));
+        res.setHeader("Content-Type", entity.mimeType);
         res.setHeader("Content-Length", entity.end - entity.start + 1);
         res.setHeader("Content-Range", "bytes " + entity.start + "-" + entity.end + "/" + entity.file.length());
     }
