@@ -22,6 +22,7 @@ public class ClientHandler {
         }
     }
 
+    public static final String MAIN_INDEX = "/index.html";
     public static final String LINE_SPLITER = "\r\n";
     public static final String HEADER_SPLITER = ": ";
     public static final String VERSION = "HTTP/1.1";

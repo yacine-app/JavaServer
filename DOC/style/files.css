@@ -1,0 +1,19 @@
+body {
+    margin: 0 auto;
+}
+.files_explorer {
+    
+}
+.files_explorer .file_link {
+    padding: 5px 10px;
+}
+.files_explorer .file_link a {
+    color: #0ae;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    font-family: monospace;
+}
+.files_explorer .file_link a::hover {
+    text-decoration: underline;
+}

@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 /**
@@ -31,7 +33,7 @@ public class Request {
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String[] a = bufferedReader.readLine().split(" ");
         this.method = a[0];
-        this.path = a[1];
+        this.path = URLDecoder.decode(a[1], StandardCharsets.UTF_8.name());
         this.version = a[2];
         this.host = bufferedReader.readLine().split(ClientHandler.HEADER_SPLITER)[1];
         String b;
@@ -61,17 +63,17 @@ public class Request {
      * @throws IOException when an IO error happened while loading or buffering a file from workspace.
      */
     public void use(String path) throws ClientHandlerException, IOException {
-        String dirPath = this.path.equals("/") ? "/index.html" : this.path;
+        String dirPath = this.path.equals("/") ? ClientHandler.MAIN_INDEX : this.path;
         File file = new File(this.clientHandler.getWorkspace() + path + dirPath);
         if(!file.exists())
             this.clientHandler.response.setResponseStatus(Response.HTTP_404);
-        else if(file.isDirectory() || !file.canRead())
+        else if(!file.canRead())
             this.clientHandler.response.setResponseStatus(Response.HTTP_403);
         else {
             this.clientHandler.response.setResponseStatus(Response.HTTP_200);
-            Entity entity = new Entity(file);
+            Entity entity = new Entity(file, this);
             String range = getHeaderValue("Range");
-            if(range != null && entity.getMimeType().contains("video")){
+            if(range != null && entity.isBrowserable()){
                 System.out.println(range);
                 this.clientHandler.response.setResponseStatus(Response.HTTP_206);
                 String[] a = range.split("=")[1].split("-");
