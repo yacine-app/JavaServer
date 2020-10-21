@@ -23,7 +23,7 @@ public class Entity {
      * @param res
      * @throws IOException
      */
-    protected static void setFileData(Entity entity, Response res) throws IOException {
+    protected static void setFileData(Entity entity, Response res) {
         if(entity == null)return;
         long length = 0L, lastModified = 0L;
         if(entity.file == null){
