@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
+import java.util.Date;
 
 import net.ClientHandler;
 import net.ClientHandlerException;
@@ -47,6 +48,7 @@ public class Main implements Interfaces.OnClientRequest {
     @Override
     public boolean onClientRequest(Request req, Response res) throws ClientHandlerException, IOException {
         System.out.println(req.getHeaderValue("Range"));
+        res.setHeader("Set-Cookie", "user=" + req.getHeaderValue("User-Agent"), "Expires="+ new Date(System.currentTimeMillis() + 31104000000L));
         req.use("/DOC");
         return false;
     }

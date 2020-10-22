@@ -23,7 +23,7 @@ public class Entity {
      * @param res
      * @throws IOException
      */
-    protected static void setFileData(Entity entity, Response res) {
+    protected static void setFileData(Entity entity, Response res) throws IOException {
         if(entity == null)return;
         long length = 0L, lastModified = 0L;
         if(entity.file == null){
@@ -59,6 +59,8 @@ public class Entity {
             this.start = 0L;
             this.end = file.length();
             String mimeType = Files.probeContentType(file.toPath());
+            String a = this.file.getName();
+            mimeType = a.substring(a.lastIndexOf(".") + 1).toLowerCase().equals("js") ? "text/javascript" : mimeType;
             this.mimeType = mimeType != null && !mimeType.isBlank() ? mimeType : this.mimeType;
         }else buildDirectoryExplorer(file);
     }
@@ -77,10 +79,12 @@ public class Entity {
         builder.append("</head>");
         builder.append("<body>");
         builder.append("<div class=\"files_explorer\">");
+        String n = "";
         for(File f: file.listFiles()){
             String a = f.getName();
-            builder.append(String.format("<div class=\"file_link\"><a href=\"%s/%s\">%s</a></div>", this.request.getPath(), a, a.subSequence(0, a.lastIndexOf("."))));
+            n += String.format("<div class=\"file_link\"><a href=\"%s/%s\">%s</a></div>", this.request.getPath(), a, a.subSequence(0, a.lastIndexOf(".")));
         }
+        builder.append(n.isEmpty() ? "<h1>No files here</h1>" : n);
         builder.append("</div>");
         builder.append("</body>");
         builder.append("</html>");
@@ -143,6 +147,10 @@ public class Entity {
      */
     protected String getMimeType() { return mimeType; }
 
+    /**
+     * 
+     * @return
+     */
     protected String getEtag(){
         return this.file == null ? "" : this.file.getName();
     }

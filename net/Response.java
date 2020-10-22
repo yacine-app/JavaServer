@@ -123,6 +123,18 @@ public class Response {
      * @param name
      * @param value
      */
+    public void setHeader(String name, String... value){
+        String t = "";
+        if(value.length == 1) t = value[0];
+        else for(String a: value) t += t.isEmpty() ? a : ";" + a;
+        setHeader(name, t);
+    }
+
+    /**
+     * 
+     * @param name
+     * @param value
+     */
     public void setHeader(String name, int value){ setHeader(name, String.valueOf(value)); }
 
     /**
